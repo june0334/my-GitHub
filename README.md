@@ -26,3 +26,12 @@ C--海淀区气象台 该气象台的特点是数据准确定很差， 但是数
 3.若C的响应时间过长，就认为A，B，C的数据都不可用，则使用D的数据。
 
 规则3基于C的响应时间总是最短的这一前提。虽然说A，B，C三个源的响应时间并不总是A>B>C，不过根据题意以及经验，A和B的响应时间短于C的概率不大，因此可以认为前述的条件总是成立的。
+
+
+这个程序使用了两个类class climate和class multiThreads。
+
+class climate包含一个main方法和一个check方法。
+
+check方法负责对A，B，C三个连接的监听。
+
+class multiThreads实现了Runable接口，并且重写了run方法。
