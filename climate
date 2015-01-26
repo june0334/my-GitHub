@@ -8,10 +8,10 @@ public class climateBroadcast {
 	public static String Data;
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		String A_url="";
-		String B_url="";
-		String C_url="";
-		String D_url="";
+		String A_url=A_URL;
+		String B_url=B_URL;
+		String C_url=C_URL;
+		String D_url=D_LOCAL_FILE_URL;
 		//创建multiThreads类的对象，该类实现了Runnable接口
 		multiThreads A=new multiThreads(A_url);
 		multiThreads B=new multiThreads(B_url);
