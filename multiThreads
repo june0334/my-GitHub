@@ -1,0 +1,61 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+
+/*
+*startTime记录请求发送的时间
+*endTime数据接收完成的时间
+*waitTime等待时间
+*/
+public class multiThreads implements Runnable {
+	public String address;
+	public String receiveData;
+	public Long startTime;
+	public Long endTime;
+	public Long waitTime;
+	
+	public multiThreads(String url){
+		this.address=url;
+		
+	}
+	//重写run方法
+	public void run() {
+		try {
+			//创建连接
+			URL url=new URL("http://"+address);
+			HttpURLConnection connection=(HttpURLConnection)url.openConnection();
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.connect();
+			
+			PrintWriter out = new PrintWriter(connection.getOutputStream());
+			//这里发送具体的请求
+			out.write("tn");
+			out.write("=");
+			out.write(URLEncoder.encode("97706707_hao_pg", "UTF-8"));
+			//记录请求发送时间
+			this.startTime=System.currentTimeMillis();
+			Scanner in=new Scanner(connection.getInputStream(),"utf-8");
+			while(in.hasNextLine()){
+				String line=in.nextLine();
+				System.out.println(line);
+				this.receiveData+=line;
+			}
+			//记录数据接收完成时间
+			this.endTime=System.currentTimeMillis();
+			//waitTime就是等待时间
+			this.waitTime=endTime-startTime;
+			System.out.println("服务器响应时间:"+this.waitTime+"ms");
+			in.close();
+			out.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
