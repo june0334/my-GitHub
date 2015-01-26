@@ -1,11 +1,63 @@
-public class cliamte(){
-	public static main(String[] args){
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class climateBroadcast {
+	public static String Data;
 	
-	
-	
+	public static void main(String[] args) throws FileNotFoundException {
+		String A_url="";
+		String B_url="";
+		String C_url="";
+		String D_url="";
+		//创建multiThreads类的对象，该类实现了Runnable接口
+		multiThreads A=new multiThreads(A_url);
+		multiThreads B=new multiThreads(B_url);
+		multiThreads C=new multiThreads(C_url);
+		//创建三个线程，同时对A，B和C发起请求
+		Thread threadA=new Thread(A);
+		Thread threadB=new Thread(B);
+		Thread threadC=new Thread(C);
+		//启动线程
+		threadA.start();
+		threadB.start();
+		threadC.start();
+		//监听三个连接的状态
+		check(A,B,C,D_url);
+		System.out.println(Data);
 	}
-
-
-
-
+	public static void check(multiThreads A,multiThreads B,multiThreads C,String urlOfD){
+		while(true){
+			if((C.waitTime!=0) && (C.waitTime<=1500) &&
+				(System.currentTimeMillis()-C.endTime<=C.waitTime)){
+				if(A.waitTime!=0){
+					Data=A.receiveData;
+					break;
+				}else if((B.waitTime!=0) &&
+						(System.currentTimeMillis()-C.endTime<=0.5*C.waitTime)){
+						Data=B.receiveData;
+				}
+			} else{
+				try {
+					File file=new File(urlOfD);
+					FileReader filereader=new FileReader(file);
+					BufferedReader bufferedreader=new BufferedReader(filereader);
+					String line;
+					while((line=bufferedreader.readLine())!=null){
+						 Data+=line;
+					}
+					filereader.close();
+					bufferedreader.close();
+				}
+				catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}				
+			}	
+		}
+	}
 }
